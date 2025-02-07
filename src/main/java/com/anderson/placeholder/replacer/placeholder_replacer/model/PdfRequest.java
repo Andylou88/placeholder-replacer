@@ -1,17 +1,15 @@
 package com.anderson.placeholder.replacer.placeholder_replacer.model;
 
+import java.util.Map;
+
 public class PdfRequest {
-    private String placeholder;
-    private String replacement;
+    private Map<String, String> placeholders;
     private String inputPdfPath;
     private String outputPdfPath;
 
-    public String getPlaceholder() {
-        return placeholder;
-    }
 
-    public String getReplacement() {
-        return replacement;
+    public Map<String, String> getPlaceholders() {
+        return placeholders;
     }
 
     public String getInputPdfPath() {

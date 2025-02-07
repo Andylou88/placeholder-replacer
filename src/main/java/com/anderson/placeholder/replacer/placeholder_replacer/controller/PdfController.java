@@ -21,7 +21,7 @@ public class PdfController {
     public ResponseEntity<String> replacePlaceholder(@RequestBody PdfRequest request)
     {
         try (var document = PDDocument.load(new File(request.getInputPdfPath()))) {
-            placeholderHandler.replacePlaceholder(document, request.getPlaceholder(), request.getReplacement(), request.getOutputPdfPath());
+            placeholderHandler.replacePlaceholder(document, request.getPlaceholders(), request.getOutputPdfPath());
             return ResponseEntity.ok("PDF updated successfully");
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating PDF: " + e.getMessage());

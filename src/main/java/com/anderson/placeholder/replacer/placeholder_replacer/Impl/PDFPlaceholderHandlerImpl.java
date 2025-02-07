@@ -9,16 +9,20 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.text.PDFTextStripper;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class PDFPlaceholderHandlerImpl implements PDFPlaceholderHandler {
 
     @Override
-    public void replacePlaceholder(PDDocument document, String placeholder, String replacement, String outputPdfPath) throws IOException {
+    public void replacePlaceholder(PDDocument document, Map<String, String> placeholders, String outputPdfPath) throws IOException {
         var pdfStripper = new PDFTextStripper();
         String content = pdfStripper.getText(document);
 
         //replace all the placeholders
-        content = content.replaceAll(placeholder,replacement);
+        for(Map.Entry<String,String> placeholder: placeholders.entrySet())
+        {
+            content = content.replaceAll(placeholder.getKey(), placeholder.getValue());
+        }
 
         // Split content into lines
         String[] lines = content.split("\\r?\\n");
