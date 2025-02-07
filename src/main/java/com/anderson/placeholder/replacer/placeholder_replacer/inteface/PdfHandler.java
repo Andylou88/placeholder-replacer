@@ -5,6 +5,6 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import java.io.IOException;
 import java.util.Map;
 
-public interface PDFPlaceholderHandler {
+public interface PdfHandler {
     void replacePlaceholder(PDDocument document, Map<String,String> placeholders, String outputPdfPath) throws IOException;
 }
