@@ -9,10 +9,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +22,8 @@ public class PdfController {
     public ResponseEntity<String> replacePlaceholder(@RequestBody PdfRequest request)
     {
         try (var document = PDDocument.load(new File(request.getInputPdfPath()))) {
-            replacePlaceholder(document, request.getPlaceholder(), request.getReplacement(), request.getOutputPdfPath());return ResponseEntity.ok("PDF updated successfully");
+            replacePlaceholder(document, request.getPlaceholder(), request.getReplacement(), request.getOutputPdfPath());
+            return ResponseEntity.ok("PDF updated successfully");
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating PDF: " + e.getMessage());
         }
