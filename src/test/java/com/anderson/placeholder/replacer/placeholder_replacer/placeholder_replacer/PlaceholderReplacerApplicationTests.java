@@ -1,4 +1,4 @@
-package com.anderson.placeholder.replacer.placeholder_replacer;
+package com.anderson.placeholder.replacer.placeholder_replacer.placeholder_replacer;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

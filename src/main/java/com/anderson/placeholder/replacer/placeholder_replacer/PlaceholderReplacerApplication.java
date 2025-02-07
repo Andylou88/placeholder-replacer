@@ -1,4 +1,4 @@
-package com.anderson.placeholder.replacer.placeholder_replacer.app;
+package com.anderson.placeholder.replacer.placeholder_replacer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
