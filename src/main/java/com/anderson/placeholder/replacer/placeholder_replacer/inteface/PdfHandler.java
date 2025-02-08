@@ -6,5 +6,5 @@ import java.io.IOException;
 import java.util.Map;
 
 public interface PdfHandler {
-    void replacePlaceholder(PDDocument document, Map<String,String> placeholders, String outputPdfPath) throws IOException;
+    void replacePlaceholder(PDDocument document, String placeholders, String replacements) throws IOException;
 }
