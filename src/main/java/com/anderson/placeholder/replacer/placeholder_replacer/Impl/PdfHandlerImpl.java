@@ -35,10 +35,7 @@ public class PdfHandlerImpl implements PdfHandler {
             float margin = 60; // Margin from the left side
             float yPosition = mediaBox.getUpperRightY() - margin;  // Start position
 
-            int linect = 0;
             for (String line: lines) {
-                linect++;
-                System.out.println(linect + ": " + line + " = " + line.length());
                 contentStream.beginText();
                 contentStream.newLineAtOffset(mediaBox.getLowerLeftX() + margin, yPosition); // Align text to the left with a margin
                 contentStream.showText(line);
