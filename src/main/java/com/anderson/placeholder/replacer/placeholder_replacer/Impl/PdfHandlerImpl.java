@@ -26,10 +26,12 @@ public class PdfHandlerImpl implements PdfHandler {
 
     @Override
     public void replacePlaceholder(PDDocument document, String placeholdersJson, String replacementsJson) throws IOException {
+
+        // extract text from pdf document
         var pdfStripper = new PDFTextStripper();
         String content = pdfStripper.getText(document);
 
-
+        //convert json strings to arrays and insert into map
         Map<String, String> placeholders = new HashMap<>();
         String[] placeholdersArray = objectMapper.readValue(placeholdersJson, String[].class);
         String[] replacementsArray = objectMapper.readValue(replacementsJson, String[].class);
@@ -39,8 +41,7 @@ public class PdfHandlerImpl implements PdfHandler {
         }
 
         //replace all the placeholders
-        for(Map.Entry<String,String> placeholder: placeholders.entrySet())
-        {
+        for (Map.Entry<String, String> placeholder : placeholders.entrySet()) {
             content = content.replaceAll(placeholder.getKey(), placeholder.getValue());
         }
 
