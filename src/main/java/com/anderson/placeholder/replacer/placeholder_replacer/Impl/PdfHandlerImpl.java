@@ -1,6 +1,7 @@
 package com.anderson.placeholder.replacer.placeholder_replacer.Impl;
 
 import com.anderson.placeholder.replacer.placeholder_replacer.inteface.PdfHandler;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -9,14 +10,31 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.text.PDFTextStripper;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class PdfHandlerImpl implements PdfHandler {
 
+    private final ObjectMapper objectMapper;
+
+    // Inject ObjectMapper via constructor
+    public PdfHandlerImpl(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
     @Override
-    public void replacePlaceholder(PDDocument document, Map<String, String> placeholders, String outputPdfPath) throws IOException {
+    public void replacePlaceholder(PDDocument document, String placeholdersJson, String replacementsJson) throws IOException {
         var pdfStripper = new PDFTextStripper();
         String content = pdfStripper.getText(document);
+
+
+        Map<String, String> placeholders = new HashMap<>();
+        String[] placeholdersArray = objectMapper.readValue(placeholdersJson, String[].class);
+        String[] replacementsArray = objectMapper.readValue(replacementsJson, String[].class);
+
+        for (int i = 0; i < placeholdersArray.length; i++) {
+            placeholders.put(placeholdersArray[i], replacementsArray[i]);
+        }
 
         //replace all the placeholders
         for(Map.Entry<String,String> placeholder: placeholders.entrySet())
