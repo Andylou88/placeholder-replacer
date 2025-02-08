@@ -52,19 +52,76 @@ public class PdfHandlerImpl implements PdfHandler {
         try (var contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.OVERWRITE, false)) {
             // Write the updated content back to the PDF
             contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
-            float margin = 60; // Margin from the left side
+            float margin = 72; // Margin from the left side
             float yPosition = mediaBox.getUpperRightY() - margin;  // Start position
+            float pageWidth = mediaBox.getWidth() - 2 * margin;
+            String wordsOutsideMargins = "";
+            int linecount = 0;
 
-            for (String line: lines) {
-                contentStream.beginText();
-                contentStream.newLineAtOffset(mediaBox.getLowerLeftX() + margin, yPosition); // Align text to the left with a margin
-                contentStream.showText(line);
+            for (String line : lines) {
+                linecount++;
 
-                if (line.length() < 64) {
-                    yPosition -= 15;
+                // appending words outside the margins in front of the next line
+                // unless text is part of closing signature
+                if (!wordsOutsideMargins.isBlank()) {
+                    if (linecount >= 16) {
+                        contentStream.beginText();
+                        contentStream.newLineAtOffset(margin, yPosition);
+                        contentStream.showText(wordsOutsideMargins);
+                        contentStream.endText();
+                        yPosition -= 15;
+                    } else {
+                        line = wordsOutsideMargins + line;
+                        wordsOutsideMargins = "";
+                    }
                 }
-                contentStream.endText();
-                yPosition -= 15; // Move to the next line
+
+                // Rewrites the text back to the pdf document
+                // while formatting the text to stay within the margins
+                String[] words = line.split(" ");
+                StringBuilder lineBuilder = new StringBuilder();
+                for (int i = 0; i < words.length; i++) {
+                    String word = words[i];
+                    String tempLine = lineBuilder.toString() + word + " ";
+                    float tempLineWidth = PDType1Font.TIMES_ROMAN.getStringWidth(tempLine) / 1000 * 12;
+                    if (tempLineWidth < pageWidth) {
+                        lineBuilder.append(word).append(" ");
+                    } else {
+                        contentStream.beginText();
+                        contentStream.newLineAtOffset(margin, yPosition);
+                        contentStream.showText(lineBuilder.toString().trim());
+                        contentStream.endText();
+                        lineBuilder.setLength(0);
+                        lineBuilder.append(word).append(" ");
+                        yPosition -= 15; // Move to the next line
+                    }
+
+                    // Check if end of sentence was reached and adds the words that were
+                    // beyond the page width to wordsOutsideMargins
+                    if (i == words.length - 1 && linecount > 1) {
+                        wordsOutsideMargins = lineBuilder.toString();
+                    }
+
+                    // adds a new lines after the greeting and before the end signature
+                    if (linecount == 1 && i == words.length - 1) {
+                        contentStream.beginText();
+                        contentStream.newLineAtOffset(margin, yPosition);
+                        contentStream.showText(lineBuilder.toString().trim());
+
+                        if (line.length() < 64) {
+                            yPosition -= 15;
+                        }
+
+                        contentStream.endText();
+                        yPosition -= 15;
+                    } else if (linecount > 15 && i == words.length - 1) {
+                        yPosition -= 15;
+                        contentStream.beginText();
+                        contentStream.newLineAtOffset(margin, yPosition);
+                        contentStream.showText(lineBuilder.toString().trim());
+                        contentStream.endText();
+                    }
+                }
             }
         }
     }
