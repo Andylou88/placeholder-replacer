@@ -65,7 +65,5 @@ public class PdfHandlerImpl implements PdfHandler {
                 yPosition -= 15; // Move to the next line
             }
         }
-
-        document.save(outputPdfPath);
     }
 }
