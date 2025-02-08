@@ -51,6 +51,7 @@ public class PdfHandlerImpl implements PdfHandler {
         PDPage page = document.getPage(0);
         PDRectangle mediaBox = page.getMediaBox();
         try (var contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.OVERWRITE, false)) {
+
             // Write the updated content back to the PDF
             contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
             float margin = 72; // Margin from the left side
@@ -65,6 +66,7 @@ public class PdfHandlerImpl implements PdfHandler {
                 // appending words outside the margins in front of the next line
                 // unless text is part of closing signature
                 if (!wordsOutsideMargins.isBlank()) {
+
                     if (linecount >= 16) {
                         contentStream.beginText();
                         contentStream.newLineAtOffset(margin, yPosition);
@@ -81,10 +83,13 @@ public class PdfHandlerImpl implements PdfHandler {
                 // while formatting the text to stay within the margins
                 String[] words = line.split(" ");
                 StringBuilder lineBuilder = new StringBuilder();
+
                 for (int i = 0; i < words.length; i++) {
+
                     String word = words[i];
                     String tempLine = lineBuilder.toString() + word + " ";
                     float tempLineWidth = PDType1Font.TIMES_ROMAN.getStringWidth(tempLine) / 1000 * 12;
+
                     if (tempLineWidth < pageWidth) {
                         lineBuilder.append(word).append(" ");
                     } else {
